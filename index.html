@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For Jiovannah 💖</title>
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Pacifico&display=swap" rel="stylesheet">
+<style>
+body {
+  margin:0;
+  padding:0;
+  background: linear-gradient(135deg,#ffe6f0,#ffc0cb);
+  font-family:'Pacifico',cursive;
+  overflow:hidden;
+  perspective:1200px;
+}
+
+/* Container */
+.container {
+  max-width:500px;
+  margin:60px auto;
+  text-align:center;
+  position:relative;
+  z-index:2;
+}
+
+/* Headings */
+h1 {
+  font-family: 'Pacifico', cursive;
+  font-size:2.2em;
+  color:#ff4da6;
+  text-shadow:2px 2px 5px rgba(255,105,180,0.5);
+  margin-bottom:20px;
+}
+
+/* 3D BOX */
+#box {
+  width:120px;
+  height:120px;
+  margin:0 auto;
+  background: linear-gradient(145deg,#ff66aa,#ff3399);
+  border-radius:15px;
+  box-shadow:0 20px 40px rgba(0,0,0,0.3);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:50px;
+  color:white;
+  cursor:pointer;
+  transform-style: preserve-3d;
+  transition: transform 1s ease-in-out;
+}
+#box.open { transform: rotateX(75deg) rotateY(20deg) scale(1.2); }
+
+/* LETTER */
+#letterPage {
+  font-family:'Great Vibes', cursive;
+  font-size:1.8em;
+  line-height:1.6;
+  color:#d60073;
+  text-shadow:1px 1px 4px rgba(255,150,200,0.5);
+}
+
+/* Buttons */
+button {
+  padding:12px 25px;
+  border:none;
+  border-radius:25px;
+  font-size:16px;
+  cursor:pointer;
+  margin:10px;
+  box-shadow:0 5px 15px rgba(255,105,180,0.3);
+  transition:0.3s;
+}
+button:hover{transform:scale(1.1);}
+.yes{background:#ff4da6;color:white;}
+.no{background:#ffc0cb;position:absolute;}
+
+/* Hidden pages */
+.hidden{display:none;}
+
+/* Scratch card */
+#scratchCard {
+  width:100%;
+  height:200px;
+  border-radius:20px;
+  margin-top:20px;
+  position:relative;
+  overflow:hidden;
+  cursor:pointer;
+  background:#d60073; /* Scratch overlay color */
+  box-shadow:0 5px 15px rgba(0,0,0,0.2);
+}
+#questionContent {
+  position:absolute;
+  width:100%;
+  height:100%;
+  top:0;
+  left:0;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  font-family:'Great Vibes',cursive;
+  font-size:1.8em;
+  color:white;
+  z-index:0;
+  pointer-events:none;
+  text-shadow:1px 1px 4px rgba(0,0,0,0.5);
+}
+canvas { position:absolute; top:0; left:0; z-index:1; }
+
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<!-- COVER PAGE -->
+<div id="cover">
+  <h1>💖 A Special Gift 💖</h1>
+  <p>Click the box to see what's inside!</p>
+  <div id="box">🎁</div>
+</div>
+
+<!-- LETTER PAGE -->
+<div id="letterPage" class="hidden">
+  <h1>My Dearest Jiovannah,</h1>
+  <p id="letterText">
+    You are the blush in my mornings, the warmth in my quiet nights, and the sweetest thought I carry every day. Being with you feels like peace, like laughter, like home.
+  </p>
+  <button class="yes" onclick="nextPage('scratchPage')">Continue 💕</button>
+</div>
+
+<!-- SCRATCH OFF PAGE -->
+<div id="scratchPage" class="hidden">
+  <h1>💖 Scratch to Reveal 💖</h1>
+  <p>Use your mouse to scratch and reveal your question!</p>
+  <div id="scratchCard">
+    <div id="questionContent">
+      Will you be my Valentine? 💖
+      <div style="margin-top:20px;">
+        <button class="yes" onclick="sayYes()">YES 💕</button>
+        <button class="no" id="noBtn">NO 🙈</button>
+      </div>
+    </div>
+    <canvas id="scratchCanvas"></canvas>
+  </div>
+</div>
+
+<!-- YES RESPONSE -->
+<div id="yesResponse" class="hidden">
+  <h1>💖 You Said YES! 💖</h1>
+  <p>You just made me the happiest person alive.</p>
+  <p>Our Valentine’s date will be magical ✨</p>
+  <p>Yours always, Gian 💕</p>
+</div>
+
+</div>
+
+<!-- MUSIC -->
+<audio autoplay loop>
+  <source src="https://www.bensound.com/bensound-music/bensound-romantic.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+// PAGE NAVIGATION
+function nextPage(page){
+  ['cover','letterPage','scratchPage','yesResponse'].forEach(p=>document.getElementById(p).classList.add('hidden'));
+  document.getElementById(page).classList.remove('hidden');
+  if(page==='letterPage'){animateLetter();}
+}
+
+// BOX CLICK
+const box=document.getElementById('box');
+box.addEventListener('click',()=>{
+  box.classList.add('open');
+  setTimeout(()=>nextPage('letterPage'),1000);
+});
+
+// LETTER TYPING
+function animateLetter(){
+  const text=document.getElementById('letterText').textContent;
+  document.getElementById('letterText').textContent='';
+  text.split('').forEach((c,i)=>{
+    const span=document.createElement('span');
+    span.textContent=c;
+    span.style.opacity=0;
+    span.style.transition='opacity 0.05s linear';
+    setTimeout(()=>{span.style.opacity=1;},i*50);
+    document.getElementById('letterText').appendChild(span);
+  });
+}
+
+// YES RESPONSE
+function sayYes(){nextPage('yesResponse');}
+
+// NO BUTTON ESCAPADE
+let angryLevel=0;
+const noBtn=document.getElementById('noBtn');
+noBtn.addEventListener('mouseover',()=>{
+  angryLevel++;
+  const x=Math.random()*300;
+  const y=Math.random()*200;
+  noBtn.style.left=x+'px';
+  noBtn.style.top=y+'px';
+  alert('❌ ERROR! 😡'.repeat(angryLevel));
+});
+
+// SCRATCH CARD LOGIC
+const canvas=document.getElementById('scratchCanvas');
+const ctx=canvas.getContext('2d');
+function resizeCanvas(){ canvas.width=scratchCard.offsetWidth; canvas.height=scratchCard.offsetHeight; }
+const scratchCard=document.getElementById('scratchCard');
+resizeCanvas();
+window.addEventListener('resize',resizeCanvas);
+ctx.fillStyle='#d60073';
+ctx.fillRect(0,0,canvas.width,canvas.height);
+
+let isDrawing=false;
+canvas.addEventListener('mousedown',()=>isDrawing=true);
+canvas.addEventListener('mouseup',()=>isDrawing=false);
+canvas.addEventListener('mousemove',(e)=>{
+  if(!isDrawing) return;
+  const rect=canvas.getBoundingClientRect();
+  const x=e.clientX-rect.left;
+  const y=e.clientY-rect.top;
+  ctx.globalCompositeOperation='destination-out';
+  ctx.beginPath();
+  ctx.arc(x,y,20,0,Math.PI*2);
+  ctx.fill();
+  checkScratchCompletion();
+});
+
+function checkScratchCompletion(){
+  const pixels=ctx.getImageData(0,0,canvas.width,canvas.height).data;
+  let transparent=0;
+  for(let i=3;i<pixels.length;i+=4){
+    if(pixels[i]===0) transparent++;
+  }
+  if(transparent>pixels.length*0.5){ // >50% scratched
+    canvas.style.display='none';
+  }
+}
+
+// BACKGROUND PARTICLES
+function createParticle(icon){
+  const p=document.createElement('div');
+  p.classList.add('particle');
+  p.textContent=icon;
+  p.style.left=Math.random()*100+'vw';
+  p.style.top=Math.random()*100+'vh';
+  p.style.fontSize=(10+Math.random()*20)+'px';
+  document.body.appendChild(p);
+  setTimeout(()=>p.remove(),6000);
+}
+setInterval(()=>createParticle('💖'),200);
+setInterval(()=>createParticle('✨'),250);
+</script>
+</body>
+</html>
